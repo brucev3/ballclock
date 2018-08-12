@@ -20,6 +20,12 @@ func main() {
 	var days, runtime = mods.Run(clock)
 
 	if clock.Minutes == 0 {
+		fmt.Println(clock.Main.Balls.Q)
+		fmt.Println(clock.Hour.Balls.S)
+		fmt.Println(clock.FiveMin.Balls.S)
+		fmt.Println(clock.Min.Balls.S)
+		fmt.Println("")
+
 		fmt.Println(clock.Balls, "balls cycle after", days, "days.")
 		fmt.Println("Completed in", runtime, "milliseconds (y.yyy seconds)")
 	} else {
@@ -29,6 +35,7 @@ func main() {
 		fmt.Println(clock.Hour.Balls.S)
 		fmt.Println(clock.FiveMin.Balls.S)
 		fmt.Println(clock.Min.Balls.S)
+		fmt.Println("")
 
 		fmt.Println(string(state))
 	}

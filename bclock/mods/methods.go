@@ -18,29 +18,44 @@ func Load(c Clock) {
 }
 
 func Run(c Clock) (days, runtime float64) {
+	days = 0.0
+	runtime = 0.0
+
+
+	if c.Minutes == 0 {
+		// repeatedly load balls from Main to Min until the first ball
+		// becomes next up in the Main queue then return
+
+		nextball := c.Main.Balls.Q[0]
+		nextnum := nextball.Number
+		fmt.Println("Next ball:",nextnum)
+
+		MinuteTick(c)
+		MinuteTick(c)
+
+	} else {
+		// repeatedly load balls from Main to Min until c.Minutes expires then return
+		nextball := c.Main.Balls.Q[0]
+		nextnum := nextball.Number
+		fmt.Println("Next ball:",nextnum)
+
+		MinuteTick(c)
+		MinuteTick(c)
+
+	}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	days = 0.1
-	runtime = 0.1
 	return days, runtime
 	}
+
+func MinuteTick(c Clock) {
+
+	ball, err := c.Main.Balls.Dequeue()
+	if err == nil && ball.Number != -1 {
+		c.Min.Balls.Push(ball)
+	}
+}
 
 func GetClockState(c Clock) []byte {
 
@@ -96,7 +111,7 @@ func (q *Queue) Enqueue(b Ball) {
 	q.Q = append(q.Q, b)
 }
 
-func (q *Queue) Dequeue(b Ball) (Ball, error) {
+func (q *Queue) Dequeue() (Ball, error) {
 	if len(q.Q) == 0 {
 		return NewBall(-1), errors.New("empty queue")
 	}
