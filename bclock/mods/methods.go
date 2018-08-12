@@ -2,6 +2,8 @@ package mods
 
 import (
 	"errors"
+	"encoding/json"
+	"fmt"
 )
 
 func Load(c Clock) {
@@ -39,6 +41,42 @@ func Run(c Clock) (days, runtime float64) {
 	runtime = 0.1
 	return days, runtime
 	}
+
+func GetClockState(c Clock) []byte {
+
+		var clockstate = Clockstate{[]int{},[]int{},[]int{},[]int{}}
+
+		mainlength := len(c.Main.Balls.Q)
+		for i := 0; i < mainlength; i++ {
+			ballnum := c.Main.Balls.Q[i].Number
+			clockstate.Main = append(clockstate.Main, ballnum)
+		}
+
+		hourlength := len(c.Hour.Balls.S)
+		for i := 0; i < hourlength; i++ {
+			ballnum := c.Hour.Balls.S[i].Number
+			clockstate.Hour = append(clockstate.Hour, ballnum)
+		}
+
+		fiveminlength := len(c.FiveMin.Balls.S)
+		for i := 0; i < fiveminlength; i++ {
+			ballnum := c.FiveMin.Balls.S[i].Number
+			clockstate.FiveMin = append(clockstate.FiveMin, ballnum)
+		}
+
+		minlength := len(c.Min.Balls.S)
+		for i := 0; i < minlength; i++ {
+			ballnum := c.Min.Balls.S[i].Number
+			clockstate.Min = append(clockstate.Min, ballnum)
+		}
+
+		state, err := json.Marshal(clockstate)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+	return state
+}
 
 func (s *Stack) Push(b Ball) {
 	s.S = append(s.S, b)

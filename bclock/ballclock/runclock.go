@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"brucev.com/bclock/mods"
-	"encoding/json"
 )
 
 func main() {
@@ -24,37 +23,7 @@ func main() {
 		fmt.Println(clock.Balls, "balls cycle after", days, "days.")
 		fmt.Println("Completed in", runtime, "milliseconds (y.yyy seconds)")
 	} else {
-
-		var clockstate = mods.Clockstate{[]int{},[]int{},[]int{},[]int{}}
-
-		mainlength := len(clock.Main.Balls.Q)
-		for i := 0; i < mainlength; i++ {
-			ballnum := clock.Main.Balls.Q[i].Number
-			clockstate.Main = append(clockstate.Main, ballnum)
-		}
-
-		hourlength := len(clock.Hour.Balls.S)
-		for i := 0; i < hourlength; i++ {
-			ballnum := clock.Hour.Balls.S[i].Number
-			clockstate.Hour = append(clockstate.Hour, ballnum)
-		}
-
-		fiveminlength := len(clock.FiveMin.Balls.S)
-		for i := 0; i < fiveminlength; i++ {
-			ballnum := clock.FiveMin.Balls.S[i].Number
-			clockstate.FiveMin = append(clockstate.FiveMin, ballnum)
-		}
-
-		minlength := len(clock.Min.Balls.S)
-		for i := 0; i < minlength; i++ {
-			ballnum := clock.Min.Balls.S[i].Number
-			clockstate.Min = append(clockstate.Min, ballnum)
-		}
-
-		state, err := json.Marshal(clockstate)
-		if err != nil {
-			fmt.Println(err)
-		}
+		state := mods.GetClockState(clock)
 
 		fmt.Println(clock.Main.Balls.Q)
 		fmt.Println(clock.Hour.Balls.S)
