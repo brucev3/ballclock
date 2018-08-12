@@ -30,6 +30,7 @@ type Bottom struct {
 }
 
 type Clock struct {
+	ElapsedDays int
 	Balls int
 	Minutes int
 	Min Minutes
@@ -62,13 +63,6 @@ type Hour struct {
 type Main struct {
 	Main []int
 }
-
-//type Clockstate struct {
-//	Min Min
-//	FiveMin FiveMin
-//	Hour Hour
-//	Main Main
-//}
 
 type Clockstate struct {
 	Min []int

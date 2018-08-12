@@ -17,10 +17,7 @@ func Load(c Clock) {
 	//fmt.Println(c.Main.Balls) //TODO debug
 }
 
-func Run(c Clock) (days, runtime float64) {
-	days = 0.0
-	runtime = 0.0
-
+func Run(c Clock) {
 
 	if c.Minutes == 0 {
 		// repeatedly load balls from Main to Min until the first ball
@@ -43,11 +40,7 @@ func Run(c Clock) (days, runtime float64) {
 		MinuteTick(c)
 
 	}
-
-
-
-	return days, runtime
-	}
+}
 
 func MinuteTick(c Clock) {
 
