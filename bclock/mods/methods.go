@@ -10,11 +10,9 @@ func Load(c Clock) {
 	// load the balls
 	ballnum := 1
 	for ballnum <= c.Balls {
-		//fmt.Println("new ballnum is:", ballnum)
 		c.Main.Balls.Enqueue(NewBall(ballnum))
 		ballnum += 1
 	}
-	//fmt.Println(c.Main.Balls) //TODO debug
 }
 
 func Run(c Clock) (days int) {
@@ -24,7 +22,7 @@ func Run(c Clock) (days int) {
 
 	if len(c.Main.Balls.Q) > 0 {
 		initialstate :=  string(GetClockState(c))
-		//fmt.Println(initialstate)
+		//fmt.Println(initialstate) // TODO debug
 
 		if c.Minutes == 0 {
 			// repeatedly load balls from Main to Min until the first ball
@@ -32,12 +30,10 @@ func Run(c Clock) (days int) {
 			MinuteTick(c)
 			minutes++
 
-			//nextnum := c.Main.Balls.Peek()
 			for {
 				MinuteTick(c)
 				minutes++
 				nextnum := c.Main.Balls.Peek()
-				//fmt.Println("Next loop ball:", nextnum)
 
 				// bail out?
 				if nextnum == 1 {
@@ -59,12 +55,9 @@ func Run(c Clock) (days int) {
 				return days
 			}
 
-			//nextnum := c.Main.Balls.Peek()
 			for {
 				MinuteTick(c)
 				minutes++
-				//nextnum := c.Main.Balls.Peek()
-				//fmt.Println("Next loop ball:", nextnum)
 
 				// bail out, minutes are expired
 				if c.Minutes == minutes {
@@ -75,11 +68,8 @@ func Run(c Clock) (days int) {
 		}
 	} else {
 		fmt.Println("Error: no balls installed. How did we get here???")
-		//os.Exit(1)
 		return days
 	}
-	//days = ComputeDays(minutes)
-	//return days
 }
 
 func MinuteTick(c Clock) {
@@ -105,7 +95,7 @@ func MinuteTick(c Clock) {
 func FiveMinuteTick(c Clock) {
 
 	if len(c.FiveMin.Balls.S) == c.FiveMin.Max {
-		// drain minutes rail and put the new ball in the five minutes rail
+		// drain five minutes rail and put the new ball in the hours rail
 		for i := c.FiveMin.Max; i > 0; i-- {
 			ball, err := c.FiveMin.Balls.Pop()
 			if err == nil && ball.Number != -1 {
@@ -124,6 +114,25 @@ func FiveMinuteTick(c Clock) {
 
 func HourTick(c Clock) {
 
+	if len(c.Hour.Balls.S) == c.Hour.Max {
+		// drain hours rail then put the new ball back into the main queue
+		for i := c.Hour.Max; i > 0; i-- {
+			ball, err := c.Hour.Balls.Pop()
+			if err == nil && ball.Number != -1 {
+				c.Main.Balls.Enqueue(ball)
+			}
+		}
+		ball, err := c.Main.Balls.Dequeue()
+		if err == nil && ball.Number != -1 {
+			c.Main.Balls.Enqueue(ball)
+		}
+	} else {
+		// put the new ball in the hours rail
+		ball, err := c.Main.Balls.Dequeue()
+		if err == nil && ball.Number != -1 {
+			c.Hour.Balls.Push(ball)
+		}
+	}
 }
 
 func GetClockState(c Clock) []byte {

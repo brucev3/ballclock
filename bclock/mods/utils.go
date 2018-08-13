@@ -12,9 +12,6 @@ func Validateargs () (balls, minutes int) {
 	minutes = 0
 	flag.Parse()
 
-	//fmt.Println("Args length: ",len(flag.Args())) // TODO debug
-	//fmt.Println(flag.Args()) // TODO debug
-
 	alength := len(flag.Args())
 	switch {
 	case alength == 0:

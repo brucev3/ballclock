@@ -32,8 +32,7 @@ func main() {
 		fmt.Println(clock.Balls, "balls cycle after", days, "days.")
 		fmt.Println("Completed in", milliseconds, "milliseconds (",seconds,"seconds )")
 
-		// TODO temporary for debug only
-		fmt.Println(string(mods.GetClockState(clock)))
+		//fmt.Println(string(mods.GetClockState(clock))) // TODO temporary for debug only
 
 	} else {
 
