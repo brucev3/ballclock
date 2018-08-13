@@ -12,9 +12,9 @@ func main() {
 	var clock = mods.Clock{
 		balls,
 		minutes,
-		mods.Minutes{Count:0,Min:0,Max:5,Balls:mods.NewStack(0)},
-		mods.FiveMinutes{Count:0,Min:0,Max:12,Balls:mods.NewStack(0)},
-		mods.Hours{Count:1,Min:1,Max:12,Balls:mods.NewStack(0)},
+		mods.Minutes{Count:0,Min:0,Max:4,Balls:mods.NewStack(0)},
+		mods.FiveMinutes{Count:0,Min:0,Max:11,Balls:mods.NewStack(0)},
+		mods.Hours{Count:1,Min:1,Max:11,Balls:mods.NewStack(0)},
 		mods.Bottom{Balls:mods.NewQueue(0)},
 	}
 

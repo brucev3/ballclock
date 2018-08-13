@@ -4,7 +4,6 @@ import (
 	"errors"
 	"encoding/json"
 	"fmt"
-	"os"
 )
 
 func Load(c Clock) {
@@ -33,11 +32,11 @@ func Run(c Clock) (days int) {
 			MinuteTick(c)
 			minutes++
 
-			nextnum := c.Main.Balls.Peek()
-			for nextnum > 1 {
+			//nextnum := c.Main.Balls.Peek()
+			for {
 				MinuteTick(c)
 				minutes++
-				nextnum = c.Main.Balls.Peek()
+				nextnum := c.Main.Balls.Peek()
 				//fmt.Println("Next loop ball:", nextnum)
 
 				// bail out?
@@ -60,11 +59,11 @@ func Run(c Clock) (days int) {
 				return days
 			}
 
-			nextnum := c.Main.Balls.Peek()
-			for nextnum > 1 {
+			//nextnum := c.Main.Balls.Peek()
+			for {
 				MinuteTick(c)
 				minutes++
-				nextnum = c.Main.Balls.Peek()
+				//nextnum := c.Main.Balls.Peek()
 				//fmt.Println("Next loop ball:", nextnum)
 
 				// bail out, minutes are expired
@@ -76,18 +75,39 @@ func Run(c Clock) (days int) {
 		}
 	} else {
 		fmt.Println("Error: no balls installed. How did we get here???")
-		os.Exit(1)
+		//os.Exit(1)
+		return days
 	}
-	days = ComputeDays(minutes)
-	return days
+	//days = ComputeDays(minutes)
+	//return days
 }
 
 func MinuteTick(c Clock) {
 
-	ball, err := c.Main.Balls.Dequeue()
-	if err == nil && ball.Number != -1 {
-		c.Min.Balls.Push(ball)
+	if len(c.Min.Balls.S) == c.Min.Max {
+		// drain minutes rail and put the new ball in the five minutes rail
+		for i := c.Min.Max; i > 0; i-- {
+			ball, err := c.Min.Balls.Pop()
+			if err == nil && ball.Number != -1 {
+				c.Main.Balls.Enqueue(ball)
+			}
+		}
+		FiveMinuteTick(c)
+	} else {
+		// put the new ball in the minutes rail
+		ball, err := c.Main.Balls.Dequeue()
+		if err == nil && ball.Number != -1 {
+			c.Min.Balls.Push(ball)
+		}
 	}
+}
+
+func FiveMinuteTick(c Clock) {
+
+}
+
+func HourTick(c Clock) {
+
 }
 
 func GetClockState(c Clock) []byte {
