@@ -25,6 +25,7 @@ func Run(c Clock) (days int) {
 
 	if len(c.Main.Balls.Q) > 0 {
 		initialstate :=  string(GetClockState(c))
+		//fmt.Println(initialstate)
 
 		if c.Minutes == 0 {
 			// repeatedly load balls from Main to Min until the first ball
@@ -36,14 +37,16 @@ func Run(c Clock) (days int) {
 			for nextnum > 1 {
 				MinuteTick(c)
 				minutes++
-				days = ComputeDays(minutes)
 				nextnum = c.Main.Balls.Peek()
 				//fmt.Println("Next loop ball:", nextnum)
 
 				// bail out?
 				if nextnum == 1 {
 					currentstate := string(GetClockState(c))
-					if IsInitialOrdering(initialstate, currentstate) {return}
+					if IsInitialOrdering(initialstate, currentstate) {
+						days = ComputeDays(minutes)
+						return days
+					}
 				}
 			}
 		} else {
@@ -52,25 +55,30 @@ func Run(c Clock) (days int) {
 			minutes++
 
 			// bail out, minutes are expired
-			if c.Minutes == minutes {return}
+			if c.Minutes == minutes {
+				days = ComputeDays(minutes)
+				return days
+			}
 
 			nextnum := c.Main.Balls.Peek()
 			for nextnum > 1 {
 				MinuteTick(c)
 				minutes++
-				days = ComputeDays(minutes)
 				nextnum = c.Main.Balls.Peek()
 				//fmt.Println("Next loop ball:", nextnum)
 
 				// bail out, minutes are expired
-				if c.Minutes == minutes {return}
+				if c.Minutes == minutes {
+					days = ComputeDays(minutes)
+					return days
+				}
 			}
 		}
 	} else {
 		fmt.Println("Error: no balls installed. How did we get here???")
 		os.Exit(1)
 	}
-
+	days = ComputeDays(minutes)
 	return days
 }
 
