@@ -25,8 +25,8 @@ func Run(c Clock) (days int) {
 		//fmt.Println(initialstate) // TODO debug
 
 		if c.Minutes == 0 {
-			// repeatedly load balls from Main to Min until the first ball
-			// becomes next up in the Main queue then return
+			// repeatedly load balls from Main to Min until the clock
+			// returns to its initial state then return
 			MinuteTick(c)
 			minutes++
 
