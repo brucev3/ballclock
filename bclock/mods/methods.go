@@ -4,6 +4,7 @@ import (
 	"errors"
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
 func Load(c Clock) {
@@ -17,29 +18,60 @@ func Load(c Clock) {
 	//fmt.Println(c.Main.Balls) //TODO debug
 }
 
-func Run(c Clock) {
+func Run(c Clock) (days int) {
 
-	if c.Minutes == 0 {
-		// repeatedly load balls from Main to Min until the first ball
-		// becomes next up in the Main queue then return
+	minutes := 0
+	days = 0
 
-		nextball := c.Main.Balls.Q[0]
-		nextnum := nextball.Number
-		fmt.Println("Next ball:",nextnum)
+	if len(c.Main.Balls.Q) > 0 {
+		initialstate :=  string(GetClockState(c))
 
-		MinuteTick(c)
-		MinuteTick(c)
+		if c.Minutes == 0 {
+			// repeatedly load balls from Main to Min until the first ball
+			// becomes next up in the Main queue then return
+			MinuteTick(c)
+			minutes++
 
+			nextnum := c.Main.Balls.Peek()
+			for nextnum > 1 {
+				MinuteTick(c)
+				minutes++
+				days = ComputeDays(minutes)
+				nextnum = c.Main.Balls.Peek()
+				//fmt.Println("Next loop ball:", nextnum)
+
+				// bail out?
+				if nextnum == 1 {
+					currentstate := string(GetClockState(c))
+					if IsInitialOrdering(initialstate, currentstate) {return}
+				}
+			}
+		} else {
+			// repeatedly load balls from Main to Min until c.Minutes expires then return
+			MinuteTick(c)
+			minutes++
+
+			// bail out, minutes are expired
+			if c.Minutes == minutes {return}
+
+			nextnum := c.Main.Balls.Peek()
+			for nextnum > 1 {
+				MinuteTick(c)
+				minutes++
+				days = ComputeDays(minutes)
+				nextnum = c.Main.Balls.Peek()
+				//fmt.Println("Next loop ball:", nextnum)
+
+				// bail out, minutes are expired
+				if c.Minutes == minutes {return}
+			}
+		}
 	} else {
-		// repeatedly load balls from Main to Min until c.Minutes expires then return
-		nextball := c.Main.Balls.Q[0]
-		nextnum := nextball.Number
-		fmt.Println("Next ball:",nextnum)
-
-		MinuteTick(c)
-		MinuteTick(c)
-
+		fmt.Println("Error: no balls installed. How did we get here???")
+		os.Exit(1)
 	}
+
+	return days
 }
 
 func MinuteTick(c Clock) {
@@ -111,4 +143,12 @@ func (q *Queue) Dequeue() (Ball, error) {
 	result := q.Q[0]
 	q.Q = q.Q[1:]
 	return result, nil
+}
+
+func (q *Queue) Peek() int {
+	if len(q.Q) != 0 {
+		return q.Q[0].Number
+	} else {
+		return -1
+	}
 }

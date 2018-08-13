@@ -56,6 +56,19 @@ func Validateargs () (balls, minutes int) {
 	return balls, minutes
 }
 
+func ComputeDays(minutes int) (days int) {
+
+	return minutes/1440
+}
+
+func IsInitialOrdering(initial, current string) bool {
+
+	if current == initial {
+		return true
+	}
+	return false
+}
+
 func NewBall(number int) Ball {
 	return Ball{number}
 }

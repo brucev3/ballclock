@@ -30,7 +30,6 @@ type Bottom struct {
 }
 
 type Clock struct {
-	ElapsedDays int
 	Balls int
 	Minutes int
 	Min Minutes
