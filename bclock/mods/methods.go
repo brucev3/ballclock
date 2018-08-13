@@ -104,6 +104,22 @@ func MinuteTick(c Clock) {
 
 func FiveMinuteTick(c Clock) {
 
+	if len(c.FiveMin.Balls.S) == c.FiveMin.Max {
+		// drain minutes rail and put the new ball in the five minutes rail
+		for i := c.FiveMin.Max; i > 0; i-- {
+			ball, err := c.FiveMin.Balls.Pop()
+			if err == nil && ball.Number != -1 {
+				c.Main.Balls.Enqueue(ball)
+			}
+		}
+		HourTick(c)
+	} else {
+		// put the new ball in the five minutes rail
+		ball, err := c.Main.Balls.Dequeue()
+		if err == nil && ball.Number != -1 {
+			c.FiveMin.Balls.Push(ball)
+		}
+	}
 }
 
 func HourTick(c Clock) {
