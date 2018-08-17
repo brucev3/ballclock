@@ -2,7 +2,7 @@
 
 The source just needs to be installed in a go environment and then can be run by doing:
 
-    bdv@mars:~/go/src/bclock/ballclock$ go install
+    ~/go/src/ballclock/bclock/ballclock$ go install
 
     $ ballclock 30
     30 balls cycle after 15 days.
